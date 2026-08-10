@@ -78,7 +78,15 @@ has them, and progress still tracks via the Criterion countdown.
 
 ## Install
 
-**Easiest (no Xcode, no developer team):**
+**Homebrew (recommended for the app):**
+
+```sh
+brew install tinyvelocet/homebrew-criterion247/criterion247
+# or, if the tap is already added:
+# brew tap tinyvelocet/homebrew-criterion247 && brew install --cask criterion247
+```
+
+**No Xcode, no developer team:**
 
 ```sh
 # build + ad-hoc sign + install to /Applications with zero team setup
@@ -106,8 +114,9 @@ open Criterion247.xcodeproj
 > **Widget tip:** on macOS 15+:
 > 1. Right-click desktop → **Edit Widgets** (or click the date/time in the menu bar).
 > 2. Search **"Criterion 24/7"** → add the Small, Medium, or Large widget.
-> 3. The widget fetches live data itself (no key, no App Group needed), so it works
->    even standalone — but a signed build + App Group is recommended for reliability.
+> 3. The widget reads the same snapshot the menu bar writes, so it stays in sync
+>    with the menu bar automatically. A signed build + App Group is recommended so
+>    the two share data reliably.
 
 The data layer (`Data/CriterionData`) is a Swift package with a full test suite:
 

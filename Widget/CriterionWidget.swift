@@ -52,41 +52,59 @@ struct CriterionLargeWidget: Widget {
 
 enum WidgetSize { case small, medium, large }
 
-/// Provides live data for the widget. The widget is self-sufficient — it fetches
-/// the Criterion feed + film page + Wikidata itself, so it never shows placeholder
-/// data and does NOT depend on the App Group or the menu-bar app being running.
-/// It writes its fresh snapshot back to the shared App Group (if available) so the
-/// app can also use it, but a missing App Group never breaks the widget.
+/// Provides data for the widget.
+///
+/// Source of truth = the shared App Group snapshot written by the menu-bar app.
+/// The widget is a READER: it loads that snapshot and simply advances the
+/// countdown from wall-clock using the same `fetchedAt`/`minutesUntilNext`
+/// anchor the menu bar uses — so widget and menu bar always agree on the film
+/// and the time remaining. It only does its own fetch as a LAST-RESORT fallback
+/// when there is no shared snapshot at all (e.g. App Group not provisioned).
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> Entry {
         Entry(snapshot: Self.placeholderSnapshot, isLoading: true)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (Entry) -> Void) {
-        // Prefer a fresh fetch; fall back to the last shared snapshot; then placeholder.
         if let shared = store.load() {
             completion(Entry(snapshot: shared, isLoading: false))
-            return
+        } else {
+            completion(Entry(snapshot: Self.placeholderSnapshot, isLoading: true))
         }
-        completion(Entry(snapshot: Self.placeholderSnapshot, isLoading: true))
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
-        // WidgetKit's completion isn't @Sendable, so to run work in a Task we box
-        // it in an @unchecked Sendable holder (the single-fire callback is a safe
-        // cross-actor hop). Build + call completion after the live fetch.
+        // WidgetKit's completion isn't @Sendable, so we box it to cross the Task.
         let done = SendableBox(completion)
 
         Task { @MainActor in
-            let base = store.load() ?? Self.placeholderSnapshot
-            let fresh = await Self.liveSnapshot() ?? base
-
             let now = Date()
-            let interval = TrackerPhase.phase(remainingSeconds: fresh.remainingSeconds) == .finale ? 60.0 : 600.0
-            let advance: [Double] = [0, interval, interval * 2]
+
+            // 1. The shared snapshot IS the source of truth (what the menu bar
+            //    shows). Use it directly — do not re-fetch, so we stay in sync.
+            var snap = store.load()
+
+            // 2. Last-resort: only if there's no shared snapshot (first run, or
+            //    no App Group) do a one-shot live fetch so the widget isn't blank.
+            if snap == nil {
+                snap = await Self.liveSnapshot()
+            }
+
+            guard let snap else {
+                done.value(Timeline(
+                    entries: [Entry(snapshot: Self.placeholderSnapshot, isLoading: true)],
+                    policy: .after(now.addingTimeInterval(600))))
+                return
+            }
+
+            // 3. Advance the SAME snapshot's countdown via wall-clock — this is
+            //    exactly how the menu bar computes it, guaranteeing agreement.
+            let remaining = StatusModel.remainingSeconds(now: now, line: snap.now)
+            let interval = TrackerPhase.phase(remainingSeconds: remaining) == .finale ? 60.0 : 600.0
+            let advance: [Double] = [0, interval, interval * 2, interval * 3]
             let entries = advance.map { m in
                 let t = now.addingTimeInterval(m)
-                let advanced = StatusModel.snapshot(now: t, line: fresh.now, film: fresh.film)
+                let advanced = StatusModel.snapshot(now: t, line: snap.now, film: snap.film)
                 return Entry(snapshot: advanced, isLoading: false)
             }
             done.value(Timeline(entries: entries, policy: .after(now.addingTimeInterval(interval))))

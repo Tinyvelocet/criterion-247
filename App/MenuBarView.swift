@@ -7,7 +7,9 @@ struct MenuBarLabel: View {
 
     var body: some View {
         HStack(spacing: 4) {
-            Image(systemName: engine.isFinale ? "film.fill" : "film")
+            // Custom clapperboard template icon (tints for light/dark menu bar).
+            Image("MenubarIcon")
+                .renderingMode(.template)
                 .foregroundStyle(engine.isFinale ? .orange : .primary)
             if let snap = engine.snapshot {
                 Text(snap.now.title)

@@ -1,5 +1,4 @@
 # Xcode
-build/
 DerivedData/
 *.xcuserstate
 xcuserdata/
@@ -8,8 +7,15 @@ xcuserdata/
 .build/
 .swiftpm/
 
+# Local build / release artifacts (attach as GitHub Release assets instead)
+build/
+dist/
+
 # Secrets — the TMDb API key is NEVER committed
 ~/.criterion247/
 
 # macOS
 .DS_Store
+
+# Screenshot recipe HTML is tracked; generated PNGs are reproducible
+Design/shots/*.png

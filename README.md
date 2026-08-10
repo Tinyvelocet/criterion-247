@@ -1,10 +1,17 @@
 # Criterion24/7 Tracker
 
-A macOS app + widget that tracks what's playing **right now** on the
+A macOS app + widgets that track what's playing **right now** on the
 [Criterion Channel's 24/7 live feed](https://whatsonnow.criterionchannel.com/),
 plus where we are in the current film.
 
-![App bundles](./Design/mockups.html)
+> **Menu bar** — the source of truth, with a custom clapperboard icon.
+> The **widgets** (medium + large) read its latest state and display it big.
+
+![Menu bar + popover](docs/menu-bar.png)
+
+![Medium widget](docs/widget-medium.png)  ![Large widget](docs/widget-large.png)
+
+![Custom menu-bar icon (light + dark)](docs/menubar-icon.png)
 
 ## What it shows
 
@@ -37,8 +44,9 @@ snapshot.json  ──▶  menu-bar app (source of truth)
 
 ## Screenshots
 
-See `Design/mockups.html` for annotated UI mockups of the menu bar, medium
-widget, large widget, and offline state.
+Live screenshots are embedded at the top of this README. An annotated HTML
+mockup covering the menu bar, both widget sizes, the finale ("ending soon")
+state, and the offline state is kept at `Design/mockups.html`.
 
 ## Requirements
 

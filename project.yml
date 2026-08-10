@@ -24,6 +24,10 @@ targets:
           - "Assets/AppIcon.iconset"
           - "Assets/icon.svg"
           - "Assets/icon-1024.png"
+          - "Assets/menubar-icon.svg"
+          - "Assets/menubar-icon-18.png"
+          - "Assets/menubar-icon-36.png"
+          - "Assets/icon-preview.html"
     dependencies:
       - package: CriterionData
       - target: Criterion247Widget

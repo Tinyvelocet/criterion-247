@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		08E339A6A6BF0720A7B243E5 /* CriterionApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = B8C528731E1317AC24C1EC43 /* CriterionApp.swift */; };
+		099FD9CEECA13CC1867BDD75 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7BACEA4D3CF196A0DA02ACD7 /* Assets.xcassets */; };
 		0C9F86468161A8C38F444CEE /* CriterionWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CBC6606A4013808B751F8C /* CriterionWidgetView.swift */; };
 		0F3AAE2A1848DE51A88CECAC /* CriterionData in Frameworks */ = {isa = PBXBuildFile; productRef = D3C017D09231CF87F48F3157 /* CriterionData */; };
 		89CB997FB25A5148E324378F /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 5C5D656003191BF5372FD272 /* AppIcon.icns */; };
@@ -52,6 +53,7 @@
 		5C5D656003191BF5372FD272 /* AppIcon.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; path = AppIcon.icns; sourceTree = "<group>"; };
 		6154F2DEE31A9C5410AB09D1 /* Criterion247.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Criterion247.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		74A0DA05AA61B4C364712AAE /* Criterion247Widget.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = Criterion247Widget.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		7BACEA4D3CF196A0DA02ACD7 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		85009F4188E4EC1BB6197E66 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		8A9BF86A000D17ACEE4E81B4 /* Criterion247.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Criterion247.entitlements; sourceTree = "<group>"; };
 		B0B64A2D9C3602B3E1829395 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
@@ -102,6 +104,7 @@
 			isa = PBXGroup;
 			children = (
 				16F8B026DEFCCB30C034F29A /* AppConfig.swift */,
+				7BACEA4D3CF196A0DA02ACD7 /* Assets.xcassets */,
 				8A9BF86A000D17ACEE4E81B4 /* Criterion247.entitlements */,
 				B8C528731E1317AC24C1EC43 /* CriterionApp.swift */,
 				85009F4188E4EC1BB6197E66 /* Info.plist */,
@@ -233,6 +236,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				89CB997FB25A5148E324378F /* AppIcon.icns in Resources */,
+				099FD9CEECA13CC1867BDD75 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

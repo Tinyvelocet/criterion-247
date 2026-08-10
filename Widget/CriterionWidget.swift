@@ -5,8 +5,22 @@ import CriterionData
 @main
 struct CriterionWidgetBundle: WidgetBundle {
     var body: some Widget {
+        CriterionSmallWidget()
         CriterionMediumWidget()
         CriterionLargeWidget()
+    }
+}
+
+struct CriterionSmallWidget: Widget {
+    let kind = "CriterionSmall"
+    var body: some WidgetConfiguration {
+        StaticConfiguration(kind: kind, provider: Provider()) { entry in
+            CriterionWidgetView(entry: entry, size: .small)
+                .widgetURL(URL(string: "https://www.criterionchannel.com/events/criterion-24-7"))
+        }
+        .configurationDisplayName("Criterion 24/7 — Small")
+        .description("A compact view of what's playing now.")
+        .supportedFamilies([.systemSmall])
     }
 }
 
@@ -36,7 +50,7 @@ struct CriterionLargeWidget: Widget {
     }
 }
 
-enum WidgetSize { case medium, large }
+enum WidgetSize { case small, medium, large }
 
 /// Provides live data for the widget. The widget is self-sufficient — it fetches
 /// the Criterion feed + film page + Wikidata itself, so it never shows placeholder

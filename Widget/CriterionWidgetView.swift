@@ -10,16 +10,18 @@ struct CriterionWidgetView: View {
     var body: some View {
         Group {
             if entry.isLoading || entry.snapshot.now.title.isEmpty {
-                LoadingState()
+                LoadingState(size: size)
             } else if let film = entry.snapshot.film {
                 switch size {
+                case .small: SmallLayout(snapshot: entry.snapshot, film: film)
                 case .medium: MediumLayout(snapshot: entry.snapshot, film: film)
                 case .large: LargeLayout(snapshot: entry.snapshot, film: film)
                 }
             } else {
                 // Film metadata pending, but title is real.
                 Text(entry.snapshot.now.title)
-                    .font(.title3).fontWeight(.bold).foregroundStyle(.white)
+                    .font(size == .small ? .headline : .title3)
+                    .fontWeight(.bold).foregroundStyle(.white)
             }
         }
         .containerBackground(for: .widget) { Color(red: 0.05, green: 0.05, blue: 0.07) }
@@ -28,16 +30,16 @@ struct CriterionWidgetView: View {
 
 /// Shown while the first live fetch is in flight (never an invented film).
 private struct LoadingState: View {
+    let size: WidgetSize
     @State private var spin = false
     var body: some View {
-        VStack(spacing: 8) {
+        VStack(spacing: 6) {
             Image(systemName: "film")
-                .font(.title2)
+                .font(size == .small ? .body : .title2)
                 .rotationEffect(.degrees(spin ? 360 : 0))
                 .onAppear { withAnimation(.linear(duration: 2).repeatForever(autoreverses: false)) { spin = true } }
-            Text("Checking Criterion 24/7…")
-                .font(.caption)
-                .foregroundStyle(.secondary)
+            Text("Checking Criterion…")
+                .font(.caption2).foregroundStyle(.secondary)
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity)
     }
@@ -214,6 +216,38 @@ private struct LargeLayout: View {
                         remaining: snapshot.remainingSeconds, isFinale: isFinale)
         }
         .padding(10)
+    }
+    private var crumbLine: String {
+        let d = film.director ?? ""
+        let y = film.year.map(String.init) ?? ""
+        let c = film.country ?? ""
+        return [d, y, c].filter { !$0.isEmpty }.joined(separator: " · ")
+    }
+}
+/// Compact square layout — small poster + title + tiny details. Fits a standard
+/// systemSmall tile without overflowing.
+private struct SmallLayout: View {
+    let snapshot: CriterionSnapshot
+    let film: FilmInfo
+    private var isFinale: Bool {
+        TrackerPhase.phase(remainingSeconds: snapshot.remainingSeconds) == .finale
+    }
+    var body: some View {
+        VStack(spacing: 6) {
+            PosterHeader(film: film, isFinale: isFinale).frame(height: 56)
+            VStack(alignment: .leading, spacing: 2) {
+                Text(snapshot.now.title)
+                    .font(.subheadline).fontWeight(.bold)
+                    .foregroundStyle(.white).lineLimit(1)
+                Text(crumbLine)
+                    .font(.caption2).foregroundStyle(.secondary).lineLimit(1)
+            }
+            .frame(maxWidth: .infinity, alignment: .leading)
+            ProgressRow(elapsed: snapshot.elapsedSeconds,
+                        runtime: film.runtimeSeconds ?? snapshot.elapsedSeconds,
+                        remaining: snapshot.remainingSeconds, isFinale: isFinale)
+        }
+        .padding(8)
     }
     private var crumbLine: String {
         let d = film.director ?? ""

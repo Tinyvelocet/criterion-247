@@ -1,0 +1,37 @@
+<!DOCTYPE html><html><head><meta charset="utf-8"><title>layout analysis</title></head>
+<body>
+<pre id="log"></pre>
+<script>
+function log(s){ const e=document.getElementById('log'); e.textContent += s + '\n'; }
+function loadImageToDataURL(src, done){
+  const img = new Image();
+  img.onload = () => {
+    const c=document.createElement('canvas'); c.width=img.width; c.height=img.height;
+    const ctx=c.getContext('2d'); ctx.drawImage(img,0,0);
+    const url=c.toDataURL('image/png');
+    img.src = url; // re-read from data URL to avoid taint
+    img.onload = ()=>done(img,c.width,c.height);
+  };
+  img.src=src;
+}
+loadImageToDataURL('user-widget-bug.png',(img,W,H)=>{
+  const c=document.createElement('canvas');c.width=W;c.height=H;
+  const ctx=c.getContext('2d');ctx.drawImage(img,0,0);
+  const d=ctx.getImageData(0,0,W,H).data;
+  const rowContent=new Array(H).fill(0);
+  for(let y=0;y<H;y++){let n=0;for(let x=0;x<W;x++){const i=(y*W+x)*4;const lum=(d[i]+d[i+1]+d[i+2])/3;if(lum>90||(d[i+3]>0&& lum>60))n++;}rowContent[y]=n;}
+  function bands(arr,min){
+    const out=[];let s=0,on=false;
+    for(let i=0;i<arr.length;i++){if(arr[i]>=min){if(!on){s=i;on=true;}}else if(on){if(i-s>2)out.push([s,i-1]);on=false;}}
+    if(on&&(arr.length-s>2))out.push([s,arr.length-1]);return out;
+  }
+  const min=Math.floor(W*0.02);
+  log('SIZE '+W+'x'+H);
+  log('ROW_BANDS(crosses>x)'+JSON.stringify(bands(rowContent,min)));
+  // count bright text pixels per band as proxy for density
+  let bnd=bands(rowContent,min);
+  log('NUM_BANDS '+bnd.length+' bandHeights '+JSON.stringify(bnd.map(b=>b[1]-b[0]+1)));
+  document.title='ANALYZED';
+});
+</script>
+</body></html>

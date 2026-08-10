@@ -5,11 +5,16 @@ A macOS app + widgets that track what's playing **right now** on the
 plus where we are in the current film.
 
 > **Menu bar** — the source of truth, with a custom clapperboard icon.
-> The **widgets** (medium + large) read its latest state and display it big.
+> The **widgets** come in **three sizes** (small, medium, large) and show the same
+> live data from the feed.
 
 ![Menu bar + popover](docs/menu-bar.png)
 
-![Medium widget](docs/widget-medium.png)  ![Large widget](docs/widget-large.png)
+![Small widget](docs/widget-small.png)
+
+![Medium widget](docs/widget-medium.png)
+
+![Large widget](docs/widget-large.png)
 
 ![Custom menu-bar icon (light + dark)](docs/menubar-icon.png)
 
@@ -100,7 +105,7 @@ open Criterion247.xcodeproj
 
 > **Widget tip:** on macOS 15+:
 > 1. Right-click desktop → **Edit Widgets** (or click the date/time in the menu bar).
-> 2. Search **"Criterion 24/7"** → add the Medium / Large widget.
+> 2. Search **"Criterion 24/7"** → add the Small, Medium, or Large widget.
 > 3. The widget fetches live data itself (no key, no App Group needed), so it works
 >    even standalone — but a signed build + App Group is recommended for reliability.
 

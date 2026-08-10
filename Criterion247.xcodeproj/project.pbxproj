@@ -11,6 +11,8 @@
 		099FD9CEECA13CC1867BDD75 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 7BACEA4D3CF196A0DA02ACD7 /* Assets.xcassets */; };
 		0C9F86468161A8C38F444CEE /* CriterionWidgetView.swift in Sources */ = {isa = PBXBuildFile; fileRef = F7CBC6606A4013808B751F8C /* CriterionWidgetView.swift */; };
 		0F3AAE2A1848DE51A88CECAC /* CriterionData in Frameworks */ = {isa = PBXBuildFile; productRef = D3C017D09231CF87F48F3157 /* CriterionData */; };
+		28C56830C177381F2032979A /* SingleInstanceGuard.swift in Sources */ = {isa = PBXBuildFile; fileRef = C3AE35BA037070CAF958D2B2 /* SingleInstanceGuard.swift */; };
+		69E345CA68B12EEC80FFB797 /* CriterionAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 11251BF57388FEDF1DF720AC /* CriterionAppDelegate.swift */; };
 		89CB997FB25A5148E324378F /* AppIcon.icns in Resources */ = {isa = PBXBuildFile; fileRef = 5C5D656003191BF5372FD272 /* AppIcon.icns */; };
 		9D74F057C3F5E9C5404997C7 /* CriterionData in Frameworks */ = {isa = PBXBuildFile; productRef = BA9DB196116C0CC7D1EE8700 /* CriterionData */; };
 		C352319AA253120B52CF8A7D /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 287080F7D8E3C3BF900B04CE /* SettingsView.swift */; };
@@ -46,6 +48,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		11251BF57388FEDF1DF720AC /* CriterionAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CriterionAppDelegate.swift; sourceTree = "<group>"; };
 		16F8B026DEFCCB30C034F29A /* AppConfig.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppConfig.swift; sourceTree = "<group>"; };
 		1D3EE6A2D2200B190F26F7C9 /* Data */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Data; path = Data; sourceTree = SOURCE_ROOT; };
 		287080F7D8E3C3BF900B04CE /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
@@ -58,6 +61,7 @@
 		8A9BF86A000D17ACEE4E81B4 /* Criterion247.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Criterion247.entitlements; sourceTree = "<group>"; };
 		B0B64A2D9C3602B3E1829395 /* MenuBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MenuBarView.swift; sourceTree = "<group>"; };
 		B8C528731E1317AC24C1EC43 /* CriterionApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CriterionApp.swift; sourceTree = "<group>"; };
+		C3AE35BA037070CAF958D2B2 /* SingleInstanceGuard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SingleInstanceGuard.swift; sourceTree = "<group>"; };
 		C74B5BDE9F0864B5690FBA4D /* CriterionWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CriterionWidget.swift; sourceTree = "<group>"; };
 		DFB4A272E82FA046795B7AED /* TrackerEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerEngine.swift; sourceTree = "<group>"; };
 		F2FD686E66C0C0CD83E0466F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
@@ -108,9 +112,11 @@
 				7BACEA4D3CF196A0DA02ACD7 /* Assets.xcassets */,
 				8A9BF86A000D17ACEE4E81B4 /* Criterion247.entitlements */,
 				B8C528731E1317AC24C1EC43 /* CriterionApp.swift */,
+				11251BF57388FEDF1DF720AC /* CriterionAppDelegate.swift */,
 				85009F4188E4EC1BB6197E66 /* Info.plist */,
 				B0B64A2D9C3602B3E1829395 /* MenuBarView.swift */,
 				287080F7D8E3C3BF900B04CE /* SettingsView.swift */,
+				C3AE35BA037070CAF958D2B2 /* SingleInstanceGuard.swift */,
 				DFB4A272E82FA046795B7AED /* TrackerEngine.swift */,
 				56AE17BA1BAF88256CDAD3CF /* Assets */,
 			);
@@ -260,8 +266,10 @@
 			files = (
 				E00BEB38B4F9C79182EE08A1 /* AppConfig.swift in Sources */,
 				08E339A6A6BF0720A7B243E5 /* CriterionApp.swift in Sources */,
+				69E345CA68B12EEC80FFB797 /* CriterionAppDelegate.swift in Sources */,
 				DA4DDC3F10946A7AC774F501 /* MenuBarView.swift in Sources */,
 				C352319AA253120B52CF8A7D /* SettingsView.swift in Sources */,
+				28C56830C177381F2032979A /* SingleInstanceGuard.swift in Sources */,
 				CC28A2B73DC3362182AFC69E /* TrackerEngine.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

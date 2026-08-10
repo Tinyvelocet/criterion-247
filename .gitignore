@@ -1,0 +1,15 @@
+# Xcode
+build/
+DerivedData/
+*.xcuserstate
+xcuserdata/
+
+# SwiftPM
+.build/
+.swiftpm/
+
+# Secrets — the TMDb API key is NEVER committed
+~/.criterion247/
+
+# macOS
+.DS_Store

@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Criterion 24/7 Tracker — UI Design Mockups</title>
+<style>
+  :root{
+    --bg:#0d0d0f; --panel:#1a1b1f; --panel2:#222329; --text:#f2f2f4;
+    --sub:#9a9aa2; --accent:#b9bcc7; --amber:#f5b041; --green:#5cb85c;
+    --border:#313238; --criterion:#737373;
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+       background:var(--bg);color:var(--text);padding:48px 24px 80px}
+  .wrap{max-width:1080px;margin:0 auto}
+  h1{font-size:26px;font-weight:700;margin:0 0 4px}
+  .sub{color:var(--sub);margin:0 0 8px;font-size:14px}
+  .note{color:var(--sub);font-size:13px;margin:0 0 32px;line-height:1.5}
+  h2{font-size:18px;font-weight:600;margin:0 0 6px;display:flex;align-items:center;gap:8px}
+  .tag{font-size:11px;font-weight:600;padding:2px 8px;border-radius:6px;letter-spacing:.3px}
+  .tag.src{background:#2b2d35;color:var(--accent)}
+  .desc{color:var(--sub);font-size:13px;margin:0 0 18px;line-height:1.5}
+  section{margin-bottom:56px}
+  .stage{background:#0a0a0c;border:1px solid var(--border);border-radius:16px;
+         padding:40px;display:flex;flex-wrap:wrap;gap:32px;align-items:flex-start;justify-content:center}
+
+  /* ==== shared poster ==== */
+  .poster{width:100%;aspect-ratio:16/9;background:#000;border-radius:10px;object-fit:cover;display:block}
+
+  /* ==== MENU BAR ==== */
+  .menubar{background:#15151a;border:1px solid var(--border);border-radius:10px;padding:8px 14px;
+           display:flex;align-items:center;gap:10px;min-width:300px}
+  .genmenu{display:flex;gap:16px;margin-left:auto;color:#cfcfd6;font-size:13px}
+  .genitem{display:flex;align-items:center;gap:6px}
+  .mb-slate{font-size:15px}
+  .mb-ic{width:14px;height:14px;display:inline-block;background:#40424a;border-radius:3px}
+  .mb-title{font-size:13.5px;font-weight:600;color:var(--sub)}
+  .mb-live{color:var(--green);font-size:13px;font-weight:600}
+  .popover, .popover-head{width:420px}
+  .popover{background:var(--panel);border:1px solid var(--border);border-radius:14px;
+           box-shadow:0 20px 60px rgba(0,0,0,.55);overflow:hidden;margin-top:10px}
+  .popover-head .poster{border-radius:0;aspect-ratio:16/8}
+  .popover-body{padding:18px 18px 16px}
+  .pop-title{font-size:19px;font-weight:700;margin:0 0 3px}
+  .pop-dir{font-size:13px;color:var(--sub);margin:0 0 8px}
+  .pop-cast{font-size:12.5px;color:var(--accent);margin:0 0 10px;line-height:1.45}
+  .pop-writer{font-size:12px;color:var(--sub);margin:0 0 14px}
+  .prog{height:6px;background:#2a2b31;border-radius:4px;overflow:hidden;margin-bottom:8px}
+  .prog>span{display:block;height:100%;background:var(--accent);border-radius:4px}
+  .prog.final>span{background:var(--amber)}
+  .progrow{display:flex;justify-content:space-between;font-size:12px;color:var(--sub);margin-bottom:14px}
+  .progrow b{color:var(--text);font-weight:600}
+  .pop-foot{display:flex;justify-content:space-between;align-items:center;
+            border-top:1px solid var(--border);padding:10px 18px 12px;font-size:12px;color:var(--sub)}
+  .cbtn{display:inline-flex;align-items:center;gap:6px;color:var(--accent);font-weight:500;
+        text-decoration:none}
+  .updated{color:var(--sub)}
+
+  /* ==== WIDGETS ==== */
+  .widget{background:var(--panel);border:none;border-radius:22px;overflow:hidden;
+          box-shadow:0 18px 55px rgba(0,0,0,.45)}
+  .w-medium{width:390px}
+  .w-large{width:390px}
+  .widget.off{opacity:.97}
+  .w-head{position:relative}
+  .w-head .poster{border-radius:0;aspect-ratio:16/9}
+  .w-head .grad{position:absolute;left:0;right:0;bottom:0;height:70%;
+                background:linear-gradient(to top, var(--panel), transparent)}
+  .w-body{padding:6px 18px 16px}
+  .w-title{font-size:17px;font-weight:700;margin:0 0 2px}
+  .w-dir{font-size:12.5px;color:var(--sub);margin:0 0 7px}
+  .w-cast{font-size:11.5px;color:var(--accent);margin:0 0 4px;line-height:1.4}
+  .w-writer{font-size:11px;color:var(--sub);margin:0 0 10px}
+  .w-prog{height:5px;background:#2a2b31;border-radius:4px;overflow:hidden;margin-bottom:7px}
+  .w-prog>span{display:block;height:100%;background:var(--accent)}
+  .w-prog.final>span{background:var(--amber)}
+  .w-progrow{display:flex;justify-content:space-between;font-size:11px;color:var(--sub)}
+  .w-progrow b{color:var(--text)}
+  .w-progrow .finale{color:var(--amber);font-weight:600}
+  .w-live{position:absolute;top:12px;left:14px;font-size:10.5px;font-weight:600;letter-spacing:.4px;
+          color:#fff;background:var(--green);padding:3px 9px;border-radius:20px;display:inline-flex;gap:5px;align-items:center}
+  .w-live.finale{background:var(--amber);color:#1a1a1a}
+  .badge{position:absolute;right:14px;bottom:2px;font-size:9px;letter-spacing:.5px;color:var(--criterion)}
+
+  /* ==== OFFLINE ==== */
+  .offline{display:flex;align-items:center;gap:10px;font-size:13px;color:var(--sub);padding:16px}
+  .offline .sti{width:34px;height:34px;border-radius:8px;background:#222329;display:flex;
+                align-items:center;justify-content:center;font-size:17px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <h1>🎬 Criterion 24/7 Tracker — UI Design Mockups</h1>
+  <p class="sub">Data source: Criterion's live feed (title, director, year, country, 3 cast, poster) + TMDb (writer, runtime).</p>
+  <p class="note">Three surfaces for your review. <b>Menu bar</b> is the source of truth (10-min / 1-min accuracy). The two <b>widget sizes</b> read the menu bar's latest state and display it large.</p>
+
+  <!-- ============ MENU BAR ============ -->
+  <section>
+    <h2>1. Menu bar <span class="tag src">source of truth</span><span class="tag" style="background:#222329">10-min / 1-min refresh</span></h2>
+    <p class="desc">Compact icon + title + time left in the bar. Click to open the popover with the full readout. Amber tint + "ending soon" when inside the last 5 minutes.</p>
+    <div class="stage">
+      <div style="width:720px">
+        <div class="menubar">
+          <span class="mb-slate">🎬</span>
+          <span class="mb-title">The Housemaid</span>
+          <span class="mb-live">● LIVE</span>
+          <div class="genmenu">
+            <span class="genitem"><span class="mb-ic"></span> 12m left</span>
+            <span class="genitem"><span class="mb-ic"></span> ✉️</span>
+            <span class="genitem"><span class="mb-ic"></span> 🔋</span>
+          </div>
+        </div>
+
+        <div class="popover">
+          <div class="popover-head">
+            <img class="poster" src="https://vhx.imgix.net/criterionchannelchartersu/assets/550da91d-c61d-4206-8786-856fbf07af2e-7ede5590.jpg?auto=format%2Ccompress&amp;fit=crop&amp;h=720&amp;q=75&amp;w=1280" alt="poster">
+          </div>
+          <div class="popover-body">
+            <p class="pop-title">The Housemaid</p>
+            <p class="pop-dir">Directed by Kim Ki-young · 1960 · South Korea</p>
+            <p class="pop-cast">Kim Jin-kyu · Ju Jung-nyeo · Lee Eun-shim</p>
+            <p class="pop-writer">Written by Kim Ki-young</p>
+            <div class="prog"><span style="width:52%"></span></div>
+            <div class="progrow"><span><b>58:00</b> / 1:51:00</span><span><b>12 min</b> remaining</span></div>
+            <div class="pop-foot">
+              <a class="cbtn" href="#">▶ Watch Criterion 24/7</a>
+              <span class="updated">Updated 1 min ago</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div style="width:720px">
+        <div class="menubar">
+          <span class="mb-slate">🎬</span>
+          <span class="mb-title">The Housemaid</span>
+          <span class="mb-live" style="color:var(--amber)">● ENDING SOON</span>
+          <div class="genmenu">
+            <span class="genitem"><span class="mb-ic"></span> 3m left</span>
+          </div>
+        </div>
+        <div class="popover">
+          <div class="popover-head">
+            <img class="poster" src="https://vhx.imgix.net/criterionchannelchartersu/assets/550da91d-c61d-4206-8786-856fbf07af2e-7ede5590.jpg?auto=format%2Ccompress&amp;fit=crop&amp;h=720&amp;q=75&amp;w=1280" alt="poster">
+          </div>
+          <div class="popover-body">
+            <p class="pop-title">The Housemaid</p>
+            <p class="pop-dir">Directed by Kim Ki-young · 1960 · South Korea</p>
+            <p class="pop-cast">Kim Jin-kyu · Ju Jung-nyeo · Lee Eun-shim</p>
+            <div class="prog final"><span style="width:97%"></span></div>
+            <div class="progrow"><span><b>1:48:00</b> / 1:51:00</span><span style="color:var(--amber)"><b>3 min</b> remaining — next film soon</span></div>
+            <div class="pop-foot">
+              <a class="cbtn" href="#">▶ Watch Criterion 24/7</a>
+              <span class="updated">Ending in 3 min</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ MEDIUM WIDGET ============ -->
+  <section>
+    <h2>2. Widget — Medium <span class="tag" style="background:#222329">390 pt</span></h2>
+    <p class="desc">Poster on top, condensed readout. Amber "LIVE · ENDING" chip when inside the last 5 minutes. Click → opens the Criterion watch page.</p>
+    <div class="stage">
+      <div class="widget w-medium">
+        <div class="w-head">
+          <img class="poster" src="https://vhx.imgix.net/criterionchannelchartersu/assets/550da91d-c61d-4206-8786-856fbf07af2e-7ede5590.jpg?auto=format%2Ccompress&amp;fit=crop&amp;h=720&amp;q=75&amp;w=1280" alt="poster">
+          <div class="grad"></div>
+          <span class="w-live">● LIVE</span>
+          <span class="badge">CRITERION 24/7</span>
+        </div>
+        <div class="w-body">
+          <p class="w-title">The Housemaid</p>
+          <p class="w-dir">Directed by Kim Ki-young · 1960 · South Korea</p>
+          <p class="w-cast">Kim Jin-kyu · Ju Jung-nyeo · Lee Eun-shim</p>
+          <div class="w-prog"><span style="width:52%"></span></div>
+          <div class="w-progrow"><span><b>58:00</b> / 1:51:00</span><span>12 min left</span></div>
+        </div>
+      </div>
+
+      <div class="widget w-medium">
+        <div class="w-head">
+          <img class="poster" src="https://vhx.imgix.net/criterionchannelchartersu/assets/550da91d-c61d-4206-8786-856fbf07af2e-7ede5590.jpg?auto=format%2Ccompress&amp;fit=crop&amp;h=720&amp;q=75&amp;w=1280" alt="poster">
+          <div class="grad"></div>
+          <span class="w-live finale">● ENDING</span>
+          <span class="badge">CRITERION 24/7</span>
+        </div>
+        <div class="w-body">
+          <p class="w-title">The Housemaid</p>
+          <p class="w-dir">Directed by Kim Ki-young · 1960 · South Korea</p>
+          <p class="w-cast">Kim Jin-kyu · Ju Jung-nyeo · Lee Eun-shim</p>
+          <div class="w-prog final"><span style="width:97%"></span></div>
+          <div class="w-progrow"><span><b>1:48:00</b> / 1:51:00</span><span class="finale">3 min left</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ LARGE WIDGET ============ -->
+  <section>
+    <h2>3. Widget — Large <span class="tag" style="background:#222329">390 pt</span></h2>
+    <p class="desc">Bigger layout with writer line + synopsis teaser in the bottom card. Same data, more breathing room.</p>
+    <div class="stage">
+      <div class="widget w-large">
+        <div class="w-head">
+          <img class="poster" src="https://vhx.imgix.net/criterionchannelchartersu/assets/550da91d-c61d-4206-8786-856fbf07af2e-7ede5590.jpg?auto=format%2Ccompress&amp;fit=crop&amp;h=720&amp;q=75&amp;w=1280" alt="poster">
+          <div class="grad"></div>
+          <span class="w-live">● LIVE</span>
+          <span class="badge">CRITERION 24/7</span>
+        </div>
+        <div class="w-body">
+          <p class="w-title" style="font-size:19px">The Housemaid</p>
+          <p class="w-dir" style="font-size:13px">Directed by Kim Ki-young · 1960 · South Korea</p>
+          <p class="w-cast" style="font-size:12px">Kim Jin-kyu · Ju Jung-nyeo · Lee Eun-shim</p>
+          <p class="w-writer">Written by Kim Ki-young</p>
+          <div class="w-prog"><span style="width:52%"></span></div>
+          <div class="w-progrow"><span><b>58:00</b> / 1:51:00</span><span>12 min left</span></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ OFFLINE STATE ============ -->
+  <section>
+    <h2>4. Offline state <span class="tag" style="background:#222329">applies to all surfaces</span></h2>
+    <p class="desc">When the feed can't be reached, we show an explicit message + retry time rather than a stale card.</p>
+    <div class="stage">
+      <div class="widget w-medium">
+        <div class="w-body" style="padding-top:18px">
+          <div class="offline">
+            <div class="sti">⚠️</div>
+            <div>Can't reach the Criterion feed right now.<br><span style="color:var(--sub);font-size:12px">Last update: The Housemaid · 18:04 · will retry in 10 min.</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <p class="note" style="margin-top:40px">Mockups built with the real Criterion page data (The Housemaid, Kim Ki-young, 1960, South Korea). Rendering is indicative — final SwiftUI will follow the same hierarchy.</p>
+</div>
+</body>
+</html>

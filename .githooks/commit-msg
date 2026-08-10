@@ -1,0 +1,9 @@
+#!/bin/sh
+# Reject commit messages that credit an AI assistant, so a public repository's
+# contributor graph reflects real authors only. Kept generic on purpose.
+message_file="$1"
+if grep -iE 'co-authored-by:.*(claude|anthropic|openai|codex|chatgpt|gemini)' "$message_file"; then
+    echo "error: commit credits an AI assistant (Co-Authored-By). Remove that trailer and re-commit." >&2
+    exit 1
+fi
+exit 0

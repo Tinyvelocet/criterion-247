@@ -57,6 +57,9 @@ targets:
         SKIP_INSTALL: YES
         CURRENT_PROJECT_VERSION: 1
         MARKETING_VERSION: "1.0"
+        # WidgetKit's non-@Sendable completion callback trips Swift-6 strict
+        # sendability. Relax to minimal (still Swift 6 language) for this target.
+        SWIFT_STRICT_CONCURRENCY: minimal
 schemes:
   Criterion247:
     build:

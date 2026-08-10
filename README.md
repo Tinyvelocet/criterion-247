@@ -71,9 +71,20 @@ better coverage of obscure films (where Wikidata has thin data), set one:
 The app works without it — runtime/writer are simply omitted if neither source
 has them, and progress still tracks via the Criterion countdown.
 
-## Build & run
+## Install
 
-XcodeGen is used to generate the Xcode project:
+**Easiest (no Xcode, no developer team):**
+
+```sh
+# build + ad-hoc sign + install to /Applications with zero team setup
+bash scripts/build.sh
+```
+
+That builds the app unsigned (ad-hoc signed) and installs it — **no Apple developer
+team required**. The menu bar works fully this way. (On current macOS, an unsigned
+widget may not register in the desktop/Notification Center; see the note below.)
+
+**Build & run from Xcode (required for the widgets to work):**
 
 ```sh
 brew install xcodegen        # if you don't have it
@@ -86,6 +97,12 @@ open Criterion247.xcodeproj
 - Register the **App Group `group.dev.criterion247`** in your Apple Developer
   account (capabilities → App Groups) — required for app↔widget sharing.
 - Select the `Criterion247` scheme and Run.
+
+> **Widget tip:** on macOS 15+:
+> 1. Right-click desktop → **Edit Widgets** (or click the date/time in the menu bar).
+> 2. Search **"Criterion 24/7"** → add the Medium / Large widget.
+> 3. The widget fetches live data itself (no key, no App Group needed), so it works
+>    even standalone — but a signed build + App Group is recommended for reliability.
 
 The data layer (`Data/CriterionData`) is a Swift package with a full test suite:
 

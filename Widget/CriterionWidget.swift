@@ -1,4 +1,4 @@
-import WidgetKit
+@preconcurrency import WidgetKit
 import SwiftUI
 import CriterionData
 
@@ -16,7 +16,6 @@ struct CriterionMediumWidget: Widget {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             CriterionWidgetView(entry: entry, size: .medium)
                 .widgetURL(URL(string: "https://www.criterionchannel.com/events/criterion-24-7"))
-                .containerBackground(for: .widget) { Color(red: 0.06, green: 0.06, blue: 0.08) }
         }
         .configurationDisplayName("Criterion 24/7 — Medium")
         .description("What's playing now on the Criterion Channel.")
@@ -30,7 +29,6 @@ struct CriterionLargeWidget: Widget {
         StaticConfiguration(kind: kind, provider: Provider()) { entry in
             CriterionWidgetView(entry: entry, size: .large)
                 .widgetURL(URL(string: "https://www.criterionchannel.com/events/criterion-24-7"))
-                .containerBackground(for: .widget) { Color(red: 0.06, green: 0.06, blue: 0.08) }
         }
         .configurationDisplayName("Criterion 24/7 — Large")
         .description("What's playing now on the Criterion Channel, with full details.")
@@ -40,56 +38,86 @@ struct CriterionLargeWidget: Widget {
 
 enum WidgetSize { case medium, large }
 
-/// Single provider serving both widget kinds from the shared snapshot.
+/// Provides live data for the widget. The widget is self-sufficient — it fetches
+/// the Criterion feed + film page + Wikidata itself, so it never shows placeholder
+/// data and does NOT depend on the App Group or the menu-bar app being running.
+/// It writes its fresh snapshot back to the shared App Group (if available) so the
+/// app can also use it, but a missing App Group never breaks the widget.
 struct Provider: TimelineProvider {
     func placeholder(in context: Context) -> Entry {
-        placeholderEntry
+        Entry(snapshot: Self.placeholderSnapshot, isLoading: true)
     }
 
     func getSnapshot(in context: Context, completion: @escaping (Entry) -> Void) {
-        completion(Entry(snapshot: store.load() ?? Self.placeholderSnapshot))
+        // Prefer a fresh fetch; fall back to the last shared snapshot; then placeholder.
+        if let shared = store.load() {
+            completion(Entry(snapshot: shared, isLoading: false))
+            return
+        }
+        completion(Entry(snapshot: Self.placeholderSnapshot, isLoading: true))
     }
 
     func getTimeline(in context: Context, completion: @escaping (Timeline<Entry>) -> Void) {
-        // Read the latest shared snapshot. The menu-bar app is the source of
-        // truth and nudges reloads on film change; we also schedule a reload
-        // within ~10 minutes so the countdown stays plausible even if the app
-        // hasn't pushed a new snapshot.
-        let snap = store.load() ?? Self.placeholderSnapshot
-        let entries: [Entry]
-        if let runtime = snap.film?.runtimeSeconds, runtime > 0, snap.now.minutesUntilNext > 0 {
-            // Advance the countdown at a few future timestamps so the progress
-            // bar doesn't go stale on the widget's system-controlled refresh.
+        // WidgetKit's completion isn't @Sendable, so to run work in a Task we box
+        // it in an @unchecked Sendable holder (the single-fire callback is a safe
+        // cross-actor hop). Build + call completion after the live fetch.
+        let done = SendableBox(completion)
+
+        Task { @MainActor in
+            let base = store.load() ?? Self.placeholderSnapshot
+            let fresh = await Self.liveSnapshot() ?? base
+
             let now = Date()
-            let minutes: [Int] = [0, 5, 10]
-            entries = minutes.map { m in
-                let t = now.addingTimeInterval(Double(m * 60))
-                let advanced = StatusModel.snapshot(
-                    now: t, line: snap.now, film: snap.film
-                )
-                return Entry(snapshot: advanced)
+            let interval = TrackerPhase.phase(remainingSeconds: fresh.remainingSeconds) == .finale ? 60.0 : 600.0
+            let advance: [Double] = [0, interval, interval * 2]
+            let entries = advance.map { m in
+                let t = now.addingTimeInterval(m)
+                let advanced = StatusModel.snapshot(now: t, line: fresh.now, film: fresh.film)
+                return Entry(snapshot: advanced, isLoading: false)
             }
-        } else {
-            entries = [Entry(snapshot: snap)]
+            done.value(Timeline(entries: entries, policy: .after(now.addingTimeInterval(interval))))
         }
-        completion(Timeline(entries: entries, policy: .after(Date().addingTimeInterval(600))))
+    }
+
+    /// Wrap a non-@Sendable single-fire callback so it can cross a Task boundary.
+    private struct SendableBox: @unchecked Sendable {
+        let value: (Timeline<Entry>) -> Void
+        init(_ v: @escaping (Timeline<Entry>) -> Void) { self.value = v }
+    }
+
+    /// Fetches the current snapshot directly from Criterion + Wikidata.
+    /// Keyless. Returns nil on network error (caller keeps last good data).
+    nonisolated private static func liveSnapshot() async -> CriterionSnapshot? {
+        do {
+            let cfg = URLSessionConfiguration.ephemeral
+            cfg.timeoutIntervalForRequest = 8
+            cfg.timeoutIntervalForResource = 12
+            let session = URLSession(configuration: cfg)
+            // In-memory store (no App Group needed) so refresh() persists trivially.
+            var memStore = SnapshotStore(appGroupID: "group.dev.criterion247")
+            memStore.containerOverride = FileManager.default.temporaryDirectory
+                .appendingPathComponent("criterion-widget-\(UUID().uuidString)")
+            let service = TrackerService(
+                session: session,
+                enrichers: [WikidataClient(session: session)],
+                store: memStore
+            )
+            return try await service.refresh(now: Date())
+        } catch {
+            return nil
+        }
     }
 
     private var store: SnapshotStore { SnapshotStore(appGroupID: "group.dev.criterion247") }
-    private var placeholderEntry: Entry { Entry(snapshot: Self.placeholderSnapshot) }
 
     struct Entry: TimelineEntry {
         let snapshot: CriterionSnapshot
+        let isLoading: Bool
         var date: Date { snapshot.lastUpdated }
     }
 
     private static let placeholderSnapshot: CriterionSnapshot = {
-        let line = NowPlayingLine(title: "The Housemaid", slug: "the-housemaid",
-                                  minutesUntilNext: 12, fetchedAt: Date())
-        let film = FilmInfo(title: "The Housemaid", director: "Kim Ki-young", year: 1960,
-                            country: "South Korea",
-                            cast: ["Kim Jin-kyu", "Ju Jung-nyeo", "Lee Eun-shim"],
-                            screenwriter: "Kim Ki-young", runtimeSeconds: 6660)
-        return StatusModel.snapshot(now: Date(), line: line, film: film)
+        let line = NowPlayingLine(title: "", slug: "", minutesUntilNext: 0, fetchedAt: Date())
+        return StatusModel.snapshot(now: Date(), line: line, film: nil)
     }()
 }

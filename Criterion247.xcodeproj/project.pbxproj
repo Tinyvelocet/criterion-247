@@ -60,6 +60,7 @@
 		B8C528731E1317AC24C1EC43 /* CriterionApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CriterionApp.swift; sourceTree = "<group>"; };
 		C74B5BDE9F0864B5690FBA4D /* CriterionWidget.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CriterionWidget.swift; sourceTree = "<group>"; };
 		DFB4A272E82FA046795B7AED /* TrackerEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TrackerEngine.swift; sourceTree = "<group>"; };
+		F2FD686E66C0C0CD83E0466F /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist; path = Info.plist; sourceTree = "<group>"; };
 		F7CBC6606A4013808B751F8C /* CriterionWidgetView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CriterionWidgetView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -122,6 +123,7 @@
 				29A7306D992CB8F90DCDF091 /* Criterion247Widget.entitlements */,
 				C74B5BDE9F0864B5690FBA4D /* CriterionWidget.swift */,
 				F7CBC6606A4013808B751F8C /* CriterionWidgetView.swift */,
+				F2FD686E66C0C0CD83E0466F /* Info.plist */,
 			);
 			path = Widget;
 			sourceTree = "<group>";
@@ -280,14 +282,15 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Widget/Criterion247Widget.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = Criterion24/7;
-				INFOPLIST_KEY_NSExtension_NSExtensionPointIdentifier = "com.apple.widgetkit-extension";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Widget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.criterion247.widget;
 				PRODUCT_NAME = Criterion247Widget;
 				SDKROOT = macosx;
@@ -444,14 +447,15 @@
 			buildSettings = {
 				CODE_SIGN_ENTITLEMENTS = Widget/Criterion247Widget.entitlements;
 				COMBINE_HIDPI_IMAGES = YES;
-				GENERATE_INFOPLIST_FILE = YES;
-				INFOPLIST_KEY_CFBundleDisplayName = Criterion24/7;
-				INFOPLIST_KEY_NSExtension_NSExtensionPointIdentifier = "com.apple.widgetkit-extension";
+				CURRENT_PROJECT_VERSION = 1;
+				GENERATE_INFOPLIST_FILE = NO;
+				INFOPLIST_FILE = Widget/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/../Frameworks",
 					"@executable_path/../../../../Frameworks",
 				);
+				MARKETING_VERSION = 1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = dev.criterion247.widget;
 				PRODUCT_NAME = Criterion247Widget;
 				SDKROOT = macosx;

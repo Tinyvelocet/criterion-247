@@ -89,21 +89,30 @@ brew install tinyvelocet/homebrew-criterion247/criterion247
 **No Xcode, no developer team:**
 
 ```sh
-# build + ad-hoc sign + install to /Applications with zero team setup
+# signed (default, if a team is set up) OR unsigned (menu-bar only):
 bash scripts/build.sh
+# For a signed build that also registers the widget, the script auto-uses your
+# Apple team if one is installed. You can force a team:
+# DEVELOPMENT_TEAM=5U7AXJPZ6J bash scripts/build.sh
 ```
 
-That builds the app unsigned (ad-hoc signed) and installs it — **no Apple developer
-team required**. The menu bar works fully this way. (On current macOS, an unsigned
-widget may not register in the desktop/Notification Center; see the note below.)
+> The script installs the app to `/Applications` — this matters: **macOS only
+> registers desktop widgets for apps installed in `/Applications`**. Running from
+> the build folder will show the menu bar but the widget won't appear in the
+> gallery.
 
-**Build & run from Xcode (required for the widgets to work):**
+Without a developer team the script falls back to an unsigned (ad-hoc) build —
+fine for the **menu bar only**; that unsigned build won't register the widget on
+macOS. Use a signed build (or build from Xcode) for the widgets.
+
+**Build & run from Xcode (alternative, widgets work):**
 
 ```sh
-brew install xcodegen        # if you don't have it
-xcodegen generate            # in the repo root
 open Criterion247.xcodeproj
 ```
+Select a team, set the App Group, and Run. Running from Xcode places/registers
+the widget once the app is in `/Applications` (or use `scripts/build.sh` to do
+the `/Applications` install for you).
 
 - Set your **Development Team** (in project.yml: `DEVELOPMENT_TEAM`) so both the
   app and widget targets can be signed.
